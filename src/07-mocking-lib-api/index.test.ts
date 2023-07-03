@@ -5,11 +5,15 @@ import { throttledGetDataFromApi } from './index';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+const response = {
+  data: [{ id: 1 }, { id: 2 }],
+};
+
 describe('throttledGetDataFromApi', () => {
   test('should create instance with provided base url', async () => {
     mockedAxios.create.mockReturnThis();
-    mockedAxios.get.mockResolvedValueOnce({ data: 1 });
-    await throttledGetDataFromApi('/data');
+    mockedAxios.get.mockResolvedValueOnce(response);
+    await throttledGetDataFromApi('/posts');
 
     expect(mockedAxios.create).toHaveBeenCalled();
   });
@@ -19,6 +23,7 @@ describe('throttledGetDataFromApi', () => {
   });
 
   test('should return response data', async () => {
-    // Write your test here
+    const result = await throttledGetDataFromApi('/posts');
+    expect(result).toEqual(response.data);
   });
 });
